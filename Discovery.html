@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal | Discovery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --discord-blurple: #5865f2;
+            --discovery-bg: #1e1f22;
+            --card-bg: #2b2d31;
+            --radiant-vortex: 0 0 15px #00d4ff, 0 0 30px rgba(0, 212, 255, 0.2);
+            --text-main: #f2f3f5;
+            --text-muted: #b5bac1;
+        }
+
+        /* --- THEME: MILKY WAY MOVING WALLPAPER --- */
+        body {
+            margin: 0;
+            background: #0f1012 url('https://www.transparenttextures.com/patterns/stardust.png');
+            animation: moveStars 120s linear infinite;
+            color: var(--text-main);
+            font-family: 'gg sans', 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        @keyframes moveStars {
+            from { background-position: 0 0; }
+            to { background-position: 10000px 5000px; }
+        }
+
+        /* --- LEFT CATEGORY SIDEBAR --- */
+        .category-sidebar {
+            width: 240px;
+            background: rgba(30, 31, 34, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 24px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .category-item {
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+        }
+
+        .category-item:hover, .category-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        /* --- MAIN DISCOVERY AREA --- */
+        .discovery-main {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Discovery Hero (Sketch 1/5) */
+        .hero-banner {
+            height: 300px;
+            margin: 16px;
+            border-radius: 8px;
+            background: linear-gradient(rgba(88, 101, 242, 0.8), rgba(0, 0, 0, 0.9)), 
+                        url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: var(--radiant-vortex);
+        }
+
+        .search-box-wrapper {
+            width: 80%;
+            max-width: 560px;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .search-box-wrapper input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 4px;
+            border: none;
+            background: #1e1f22;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Grid Results (Sketch 5/6) */
+        .results-grid {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .cell-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .cell-card:hover {
+            transform: translateY(-4px);
+            background: #35373c;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .card-banner {
+            height: 120px;
+            background: #5865f2;
+            position: relative;
+        }
+
+        .card-pfp {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: #23a559;
+            border: 4px solid var(--card-bg);
+            position: absolute;
+            bottom: -32px;
+            left: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-content {
+            padding: 40px 16px 16px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 8px 0 16px;
+            line-height: 1.4;
+        }
+
+        .member-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #23a559;
+        }
+
+        /* Radiant Text (Sketch 7) */
+        .radiant-papa {
+            color: #00d4ff;
+            text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+<!-- UNIVERSAL HUB NAV BAR -->
+<div id='hub-nav' style='position:fixed;top:0;left:0;right:0;height:42px;background:rgba(4,4,15,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 12px;gap:6px;z-index:99999;font-family:Oxanium,sans-serif'>
+  <a href="index.html" style='display:flex;align-items:center;gap:6px;padding:5px 10px;background:linear-gradient(135deg,rgba(129,140,248,.3),rgba(79,70,229,.2));border:1px solid rgba(129,140,248,.4);border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:.05em'>⬅ HUB</a>
+  <div style='width:1px;height:20px;background:rgba(255,255,255,0.1);margin:0 4px'></div>
+  <a href="firechat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fca5a5'>🔥 Fire</a>
+  <a href="discord.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#8b9cf8'>⚙ Discord</a>
+  <a href="cell_chat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#00d4ff'>⛪ Cells</a>
+  <a href="Mentorship.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#34d399'>🎓 Mentor</a>
+  <a href="vortex.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(232,121,249,.1);border:1px solid rgba(232,121,249,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#e879f9'>⚡ Vortex</a>
+  <a href="Discovery.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fbbf24'>🧭 Discover</a>
+  <div style='flex:1'></div>
+  <a href="admin.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#f87171'>🛡️ Admin</a>
+</div>
+<style>html, body { margin-top: 0 !important; } #hub-nav { position: fixed; z-index: 99999; } body > *:not(#hub-nav) { margin-top: 42px; } .orbs,.noise,.scan-line,.scan,canvas,#rainbowCv,#ptcls { margin-top: 0 !important; top: 42px; } </style>
+
+
+    <aside class="category-sidebar">
+        <h3 style="padding: 0 16px 12px; font-size: 1.2rem;">Discovery</h3>
+        <div class="category-item active"><i class="fa-solid fa-compass"></i> Home</div>
+        <div class="category-item"><i class="fa-solid fa-hands-praying"></i> Church Cells</div>
+        <div class="category-item"><i class="fa-solid fa-graduation-cap"></i> Mentorship</div>
+        <div class="category-item"><i class="fa-solid fa-atom"></i> Vortex Feed</div>
+        <div class="category-item"><i class="fa-solid fa-user-group"></i> Friends</div>
+    </aside>
+
+    <main class="discovery-main">
+        
+        <section class="hero-banner">
+            <h1 style="font-size: 2.5rem; margin-bottom: 8px;">Find your community</h1>
+            <p style="color: rgba(255,255,255,0.8);">From church cells to technical mentorship</p>
+            
+            <div class="search-box-wrapper">
+                <input type="text" placeholder="Explore cells, pastors, or schools...">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 16px; top: 15px; color: var(--text-muted);"></i>
+            </div>
+        </section>
+
+        <section class="results-grid">
+            
+            <div class="cell-card">
+                <div class="card-banner" style="background: linear-gradient(45deg, #5865f2, #9b59b6);"></div>
+                <div class="card-content">
+                    <div class="card-pfp"><i class="fa-solid fa-dove"></i></div>
+                    <div class="card-title">Youth Prayer Cell <i class="fa-solid fa-circle-check" style="color: #00d4ff; font-size: 0.9rem;"></i></div>
+                    <p class="card-desc">Welcome to cell chat! Join us for daily evening prayers and fellowship led by <span class="radiant-papa">Cell Papa John</span>.</p>
+                    <div class="member-count">
+                        <div class="status-dot"></div> 1,240 Online • 5,000 Members
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-card">
+                <div class="card-banner" style="background: linear-gradient(45deg, #e67e22, #f1c40f);"></div>
+                <div class="card-content">
+                    <div class="card-pfp" style="background: #e67e22;"><i class="fa-solid fa-book-bible"></i></div>
+                    <div class="card-title">Bible Study Group</div>
+                    <p class="card-desc">Deep diving into the scriptures every Wednesday. Search for your local pastor to join a specific branch.</p>
+                    <div class="member-count">
+                        <div class="status-dot"></div> 450 Online • 2,100 Members
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell-card">
+                <div class="card-banner" style="background: #000; border-bottom: 1px solid #333;"></div>
+                <div class="card-content">
+                    <div class="card-pfp" style="background: #00d4ff;"><i class="fa-solid fa-school"></i></div>
+                    <div class="card-title">Global Tech Institute</div>
+                    <p class="card-desc">Official mentorship program. Tap this box to find all assigned mentors and view their emails.</p>
+                    <div class="member-count">
+                        <div class="status-dot" style="background: #5865f2;"></div> 12 Mentors Available
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html><script>
+// Discovery search functionality
+const searchInput = document.querySelector('.search-box-wrapper input');
+const cards = document.querySelectorAll('.cell-card');
+
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = (q === '' || text.includes(q)) ? 'block' : 'none';
+    });
+  });
+}
+
+// Category sidebar navigation
+const categoryItems = document.querySelectorAll('.category-item');
+categoryItems.forEach(item => {
+  item.addEventListener('click', function() {
+    categoryItems.forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+    const section = this.textContent.trim();
+    const routes = {
+      'Home': null,
+      'Church Cells': 'cell_chat.html',
+      'Mentorship': 'Mentorship.html',
+      'Vortex Feed': 'vortex.html',
+      'Friends': 'firechat.html',
+    };
+    const route = routes[section];
+    if (route) window.location.href = route;
+  });
+});
+
+// Card click navigation
+cards.forEach(card => {
+  card.addEventListener('click', function() {
+    const title = this.querySelector('.card-title')?.textContent?.trim() || '';
+    if (title.includes('Youth Prayer') || title.includes('Bible Study')) {
+      window.location.href = 'cell_chat.html';
+    } else if (title.includes('Global Tech') || title.includes('Mentor')) {
+      window.location.href = 'Mentorship.html';
+    } else {
+      window.location.href = 'firechat.html';
+    }
+  });
+});
+
+// Add "Join" buttons to all cards
+cards.forEach(card => {
+  const content = card.querySelector('.card-content');
+  if (content && !content.querySelector('.join-btn-disc')) {
+    const btn = document.createElement('button');
+    btn.className = 'join-btn-disc';
+    btn.textContent = 'Join Community →';
+    btn.style.cssText = 'margin-top:12px;padding:8px 16px;background:#5865f2;border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;width:100%';
+    btn.onmouseenter = () => btn.style.background = '#4752c4';
+    btn.onmouseleave = () => btn.style.background = '#5865f2';
+    btn.onclick = (e) => { e.stopPropagation(); card.click(); };
+    content.appendChild(btn);
+  }
+});
+
+console.log("Discovery fully functional");
+</script>

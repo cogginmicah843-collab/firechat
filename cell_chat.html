@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal | Church & Cells</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- THEME: MILKY WAY MOVING WALLPAPER --- */
+        :root {
+            --radiant-glow: 0 0 15px #5865f2, 0 0 30px #5865f2;
+            --glass-bg: rgba(255, 255, 255, 0.07);
+        }
+
+        body {
+            margin: 0;
+            background: #05070a url('https://www.transparenttextures.com/patterns/stardust.png');
+            animation: moveStars 150s linear infinite;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes moveStars {
+            from { background-position: 0 0; }
+            to { background-position: 10000px 5000px; }
+        }
+
+        /* --- TOP BAR --- */
+        .church-header {
+            height: 60px;
+            padding: 0 20px;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 8px 12px 8px 35px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            color: white;
+            outline: none;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #949ba4;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        /* LEFT: CELL BOX (Sketch 5) */
+        .cell-directory {
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cell-card {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cell-pfp {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #5865f2, #00d4ff);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: var(--radiant-glow);
+        }
+
+        .join-btn {
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: #23a559;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .join-btn:hover { background: #1a7f45; transform: scale(1.05); }
+
+        /* RIGHT: CHAT AREA (Sketch 5/8) */
+        .chat-view {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-info {
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .member-sidebar {
+            width: 200px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .role-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #949ba4;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        /* RADIANT GLOW WORDS (Sketch 7) */
+        .radiant-text {
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            font-weight: bold;
+        }
+
+        .message-bubble {
+            background: var(--glass-bg);
+            padding: 12px 18px;
+            border-radius: 15px;
+            margin: 10px 20px;
+            width: fit-content;
+            border: 1px solid rgba(88, 101, 242, 0.3);
+        }
+    </style>
+</head>
+<body>
+<!-- UNIVERSAL HUB NAV BAR -->
+<div id='hub-nav' style='position:fixed;top:0;left:0;right:0;height:42px;background:rgba(4,4,15,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 12px;gap:6px;z-index:99999;font-family:Oxanium,sans-serif'>
+  <a href="index.html" style='display:flex;align-items:center;gap:6px;padding:5px 10px;background:linear-gradient(135deg,rgba(129,140,248,.3),rgba(79,70,229,.2));border:1px solid rgba(129,140,248,.4);border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:.05em'>⬅ HUB</a>
+  <div style='width:1px;height:20px;background:rgba(255,255,255,0.1);margin:0 4px'></div>
+  <a href="firechat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fca5a5'>🔥 Fire</a>
+  <a href="discord.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#8b9cf8'>⚙ Discord</a>
+  <a href="cell_chat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#00d4ff'>⛪ Cells</a>
+  <a href="Mentorship.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#34d399'>🎓 Mentor</a>
+  <a href="vortex.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(232,121,249,.1);border:1px solid rgba(232,121,249,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#e879f9'>⚡ Vortex</a>
+  <a href="Discovery.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fbbf24'>🧭 Discover</a>
+  <div style='flex:1'></div>
+  <a href="admin.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#f87171'>🛡️ Admin</a>
+</div>
+<style>html, body { margin-top: 0 !important; } #hub-nav { position: fixed; z-index: 99999; } body > *:not(#hub-nav) { margin-top: 42px; } .orbs,.noise,.scan-line,.scan,canvas,#rainbowCv,#ptcls { margin-top: 0 !important; top: 42px; } </style>
+
+
+    <header class="church-header">
+        <div style="font-weight: 900; letter-spacing: 1px;">WELCOME TO CELL CHAT</div>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search cells or pastor...">
+        </div>
+        <div><i class="fa-solid fa-church"></i></div>
+    </header>
+
+    <main class="main-content">
+        <div class="cell-directory">
+            <div class="cell-card">
+                <div class="cell-pfp"><i class="fa-solid fa-hands-praying"></i></div>
+                <h2 class="radiant-text">Youth Prayer Cell</h2>
+                <p style="color: #949ba4; margin-top: 5px;">12 Members Active</p>
+                <button class="join-btn" onclick="alert('Joining Cell...')">Join Cell</button>
+            </div>
+
+            <div class="cell-card" style="padding: 15px;">
+                <h4 style="margin-bottom: 10px;">Pastor & Friends</h4>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #444; border: 2px solid #5865f2;"></div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #444;"></div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #444;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-view">
+            <div class="chat-info">
+                <div><strong># General-Prayer</strong></div>
+                <div style="display: flex; gap: 15px; color: #949ba4;">
+                    <i class="fa-solid fa-video"></i>
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+            </div>
+            <div style="flex: 1; overflow-y: auto;">
+                <div class="message-bubble">
+                    <span style="color: #5865f2; font-weight: bold;">Pastor_John</span>: 
+                    Welcome to the cell! Let us begin with <span class="radiant-text">Prayer</span>.
+                </div>
+            </div>
+            <div style="padding: 20px;">
+                <input type="text" style="width: 100%; padding: 12px; background: #1e1f22; border: none; border-radius: 8px; color: white;" placeholder="Message Cell...">
+            </div>
+        </div>
+
+        <aside class="member-sidebar">
+            <div class="role-tag">Cell Papa/Mama</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 8px; height: 8px; background: #23a559; border-radius: 50%;"></div>
+                <span>Pastor_John</span>
+            </div>
+
+            <div class="role-tag">Members — 11</div>
+            <div style="display: flex; align-items: center; gap: 8px; opacity: 0.7;">
+                <div style="width: 8px; height: 8px; background: #949ba4; border-radius: 50%;"></div>
+                <span>Brother_Coggins</span>
+            </div>
+        </aside>
+    </main>
+
+</body>
+</html><script>
+// Cell Chat working functionality
+const cells = [
+  {name:'Youth Prayer Cell', members:12, color:'linear-gradient(45deg,#5865f2,#00d4ff)', icon:'fa-hands-praying'},
+  {name:'Bible Study Group', members:8, color:'linear-gradient(45deg,#e67e22,#f1c40f)', icon:'fa-book-bible'},
+  {name:'Morning Devotion', members:6, color:'linear-gradient(45deg,#23a559,#00d4ff)', icon:'fa-sun'},
+  {name:'Friday Fellowship', members:15, color:'linear-gradient(45deg,#9b59b6,#5865f2)', icon:'fa-people-group'},
+];
+
+// Search functionality
+document.querySelector('.search-container input')?.addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  const cards = document.querySelectorAll('.cell-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.opacity = text.includes(q) || q === '' ? '1' : '0.3';
+  });
+});
+
+// Join button
+document.querySelectorAll('.join-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const cellName = this.closest('.cell-card')?.querySelector('h2')?.textContent || 'Cell';
+    this.textContent = '✓ Joined!';
+    this.style.background = '#5865f2';
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(35,165,89,.95);color:#fff;padding:10px 24px;border-radius:100px;font-size:13px;font-weight:700;z-index:9999';
+    toast.textContent = `⛪ You joined ${cellName}!`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  });
+});
+
+// Chat input
+const msgInput = document.querySelector('input[placeholder="Message Cell..."]');
+if (msgInput) {
+  msgInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      const msgArea = document.querySelector('.chat-view > div:nth-child(2)');
+      const newMsg = document.createElement('div');
+      newMsg.className = 'message-bubble';
+      newMsg.innerHTML = `<span style="color:#23a559;font-weight:bold">You</span>: ${this.value}`;
+      newMsg.style.alignSelf = 'flex-end';
+      newMsg.style.background = 'rgba(88,101,242,0.2)';
+      msgArea.appendChild(newMsg);
+      msgArea.scrollTop = msgArea.scrollHeight;
+      this.value = '';
+    }
+  });
+}
+
+// Video/Phone icons
+document.querySelector('.fa-video')?.parentElement?.addEventListener('click', () => alert('Starting video prayer call...'));
+document.querySelector('.fa-phone')?.parentElement?.addEventListener('click', () => alert('Starting voice prayer call...'));
+
+console.log("Cell Chat fully functional");
+</script>

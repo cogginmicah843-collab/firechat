@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal | All-in-One Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --discord-gray: #313338;
+            --sidebar-black: #1e1f22;
+            --accent-blue: #5865f2;
+            --text-main: #dbdee1;
+            --text-muted: #949ba4;
+            --vortex-glow: #00d4ff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'gg sans', 'Inter', sans-serif; }
+        body { background: var(--sidebar-black); color: white; height: 100vh; display: flex; overflow: hidden; }
+
+        /* --- 1. MAIN SIDEBAR (DESTINATIONS) --- */
+        .main-sidebar {
+            width: 72px; background: var(--sidebar-black); padding: 12px 0;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-icon {
+            width: 48px; height: 48px; background: var(--discord-gray); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: 0.2s; color: var(--text-main); font-size: 1.2rem;
+        }
+        .nav-icon:hover, .nav-icon.active { border-radius: 15px; background: var(--accent-blue); color: white; }
+
+        /* --- 2. DYNAMIC CONTENT AREA --- */
+        .app-container { flex: 1; display: flex; flex-direction: column; background: var(--discord-gray); }
+
+        /* --- 3. TOP NAVIGATION (ORGANIZED BY YOUR REQUEST) --- */
+        .top-nav {
+            height: 50px; background: rgba(0,0,0,0.2); display: flex; align-items: center;
+            padding: 0 20px; gap: 30px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-tab { cursor: pointer; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+        .nav-tab:hover, .nav-tab.active { color: white; }
+
+        /* --- 4. SECTION VISIBILITY LOGIC --- */
+        .view-section { display: none; flex: 1; height: calc(100vh - 50px); }
+        .view-section.active { display: flex; }
+
+        /* --- MENTORSHIP VIEW (ORGANIZED) --- */
+        .mentorship-layout { flex: 1; display: flex; }
+        .directory { flex: 1; padding: 30px; overflow-y: auto; }
+        .search-container { max-width: 600px; margin-bottom: 40px; }
+        .search-container h2 { margin-bottom: 15px; font-size: 1.5rem; }
+        .search-box { 
+            width: 100%; padding: 12px 40px; background: #1e1f22; border: 1px solid #444; 
+            border-radius: 8px; color: white; outline: none; margin-bottom: 20px;
+        }
+
+        /* The Result Boxes you requested */
+        .result-box {
+            background: #2b2d31; border-radius: 12px; padding: 20px; width: 300px;
+            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
+        }
+        .pfp-lg { width: 80px; height: 80px; background: var(--accent-blue); border-radius: 15px; margin-bottom: 15px; }
+        .result-box h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .result-box p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-sm { flex: 1; padding: 8px; border-radius: 4px; border: none; background: #4e5058; color: white; cursor: pointer; font-size: 0.8rem; }
+        .btn-sm:hover { background: var(--accent-blue); }
+
+        /* Right Side Social Feed */
+        .social-sidebar { width: 350px; border-left: 1px solid rgba(255,255,255,0.1); padding: 20px; overflow-y: auto; }
+        .post-card { background: #1e1f22; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+        .post-img { height: 200px; background: #000; display: flex; align-items: center; justify-content: center; color: #444; }
+
+    </style>
+</head>
+<body>
+<!-- UNIVERSAL HUB NAV BAR -->
+<div id='hub-nav' style='position:fixed;top:0;left:0;right:0;height:42px;background:rgba(4,4,15,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 12px;gap:6px;z-index:99999;font-family:Oxanium,sans-serif'>
+  <a href="index.html" style='display:flex;align-items:center;gap:6px;padding:5px 10px;background:linear-gradient(135deg,rgba(129,140,248,.3),rgba(79,70,229,.2));border:1px solid rgba(129,140,248,.4);border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:.05em'>⬅ HUB</a>
+  <div style='width:1px;height:20px;background:rgba(255,255,255,0.1);margin:0 4px'></div>
+  <a href="firechat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fca5a5'>🔥 Fire</a>
+  <a href="discord.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#8b9cf8'>⚙ Discord</a>
+  <a href="cell_chat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#00d4ff'>⛪ Cells</a>
+  <a href="Mentorship.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#34d399'>🎓 Mentor</a>
+  <a href="vortex.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(232,121,249,.1);border:1px solid rgba(232,121,249,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#e879f9'>⚡ Vortex</a>
+  <a href="Discovery.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fbbf24'>🧭 Discover</a>
+  <div style='flex:1'></div>
+  <a href="admin.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#f87171'>🛡️ Admin</a>
+</div>
+<style>html, body { margin-top: 0 !important; } #hub-nav { position: fixed; z-index: 99999; } body > *:not(#hub-nav) { margin-top: 42px; } .orbs,.noise,.scan-line,.scan,canvas,#rainbowCv,#ptcls { margin-top: 0 !important; top: 42px; } </style>
+
+
+    <nav class="main-sidebar">
+        <div class="nav-icon active" onclick="switchMain('discord')"><i class="fa-brands fa-discord"></i></div>
+        <div class="nav-icon" onclick="switchMain('mentorship')"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="nav-icon" onclick="switchMain('vortex')"><i class="fa-solid fa-atom"></i></div>
+        <div class="nav-icon"><i class="fa-solid fa-plus" style="color: #23a559;"></i></div>
+    </nav>
+
+    <div class="app-container">
+        <header class="top-nav" id="top-nav-bar">
+            <span class="nav-tab active">Home</span>
+            <span class="nav-tab">Group Mentors</span>
+            <span class="nav-tab">Mentors</span>
+            <span class="nav-tab" style="margin-left: auto;">Login / Signup</span>
+        </header>
+
+        <section id="mentorship-view" class="view-section active">
+            <div class="mentorship-layout">
+                <div class="directory">
+                    <div class="search-container">
+                        <h2>School Search</h2>
+                        <input type="text" class="search-box" placeholder="Type school name...">
+                        
+                        <div class="result-box">
+                            <div class="pfp-lg"><i class="fa-solid fa-school fa-2x" style="margin: 20px;"></i></div>
+                            <h3>Global Tech High</h3>
+                            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7cec9c1c8e7c0cbc8c5c6cbd3c2c4cf89c4c8ca">[email&#160;protected]</a></p>
+                        </div>
+
+                        <hr style="opacity: 0.1; margin: 30px 0;">
+
+                        <h2>Mentor Search</h2>
+                        <input type="text" class="search-box" placeholder="Search name of mentor...">
+                        
+                        <div class="result-box">
+                            <div class="pfp-lg" style="background: var(--vortex-glow);"><i class="fa-solid fa-user-tie fa-2x" style="margin: 20px;"></i></div>
+                            <h3>Mentor John</h3>
+                            <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="13797c7b7d3d7e767d677c615360707b7c7c7f3d707c7e">[email&#160;protected]</a></p>
+                            <div class="btn-group">
+                                <button class="btn-sm"><i class="fa-solid fa-phone"></i> Voice</button>
+                                <button class="btn-sm"><i class="fa-solid fa-message"></i> Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="social-sidebar">
+                    <h3 style="margin-bottom: 20px;">Mentor Posts</h3>
+                    <div class="post-card">
+                        <div class="post-img"><i class="fa-solid fa-image fa-3x"></i></div>
+                        <div style="padding: 12px;">
+                            <p><strong>Global Tech</strong>: New session starting Monday!</p>
+                            <div style="margin-top: 10px; display: flex; gap: 15px; color: var(--text-muted);">
+                                <i class="fa-regular fa-heart"></i>
+                                <i class="fa-regular fa-comment"></i>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="discord-view" class="view-section">
+            <div style="padding: 40px;">
+                <h1>Discord Chat View</h1>
+                <p>Chat rooms would load here...</p>
+            </div>
+        </section>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function switchMain(section) {
+            // Hide all
+            document.querySelectorAll('.view-section').forEach(s =<script>
+// Make all nav tabs work
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const label = this.textContent.trim();
+    if (label === 'Login / Signup') {
+      showMentorModal('login');
+    } else if (label === 'Group Mentors') {
+      showGroupMentors();
+    } else if (label === 'Mentors') {
+      showAllMentors();
+    } else {
+      document.querySelector('#mentorship-view').classList.add('active');
+    }
+  });
+});
+
+// Main sidebar nav icons
+document.querySelectorAll('.nav-icon').forEach(icon => {
+  icon.addEventListener('click', function() {
+    document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// School search
+const schoolSearch = document.querySelector('.search-box[placeholder="Type school name..."]');
+if (schoolSearch) {
+  schoolSearch.addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    const schools = [
+      {name:'Global Tech High', email:'info@globaltech.com', icon:'🏫'},
+      {name:'Nexus Academy', email:'admin@nexusacademy.edu', icon:'🎓'},
+      {name:'Faith College', email:'contact@faithcollege.org', icon:'⛪'},
+      {name:'Digital Institute', email:'hello@digitalinstitute.io', icon:'💻'},
+    ];
+    const resultBox = document.querySelector('.result-box');
+    if (!resultBox) return;
+    const match = schools.find(s => s.name.toLowerCase().includes(q) || q === '');
+    if (match && q) {
+      resultBox.querySelector('h3').textContent = match.name;
+      resultBox.querySelector('p').textContent = match.email;
+      resultBox.style.border = '1px solid rgba(88,101,242,.5)';
+      resultBox.style.boxShadow = '0 0 20px rgba(88,101,242,.2)';
+    } else if (!q) {
+      resultBox.querySelector('h3').textContent = 'Global Tech High';
+      resultBox.querySelector('p').textContent = 'info@globaltech.com';
+      resultBox.style.border = '';
+      resultBox.style.boxShadow = '';
+    }
+  });
+}
+
+// Mentor search
+const mentorSearch = document.querySelector('.search-box[placeholder="Search name of mentor..."]');
+if (mentorSearch) {
+  const mentors = [
+    {name:'Mentor John', email:'john.mentor@school.com', color:'var(--vortex-glow)'},
+    {name:'Dr. Sarah M.', email:'sarah.m@nexus.edu', color:'#e879f9'},
+    {name:'Prof. David K.', email:'d.kim@globaltech.com', color:'#f87171'},
+    {name:'Coach Rina', email:'rina@faithcollege.org', color:'#34d399'},
+  ];
+  mentorSearch.addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    const resultBox = document.querySelectorAll('.result-box')[1];
+    if (!resultBox) return;
+    const match = mentors.find(m => m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q));
+    if (match && q) {
+      resultBox.querySelector('h3').textContent = match.name;
+      resultBox.querySelector('p').textContent = match.email;
+      resultBox.querySelector('.pfp-lg').style.background = match.color;
+      resultBox.style.border = '1px solid rgba(0,212,255,.4)';
+    } else if (!q) {
+      resultBox.querySelector('h3').textContent = 'Mentor John';
+      resultBox.querySelector('p').textContent = 'john.mentor@school.com';
+      resultBox.style.border = '';
+    }
+  });
+}
+
+// Mentor buttons
+document.querySelectorAll('.btn-sm').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const isVoice = this.innerHTML.includes('phone') || this.innerHTML.includes('Voice');
+    const isMsg = this.innerHTML.includes('message') || this.innerHTML.includes('Message');
+    const mentorName = this.closest('.result-box')?.querySelector('h3')?.textContent || 'Mentor';
+    if (isVoice) {
+      showMentorToast(`📞 Calling ${mentorName}...`);
+    } else if (isMsg) {
+      window.location.href = 'firechat.html';
+    }
+  });
+});
+
+// Post like/comment
+document.querySelectorAll('.fa-regular.fa-heart').forEach(heart => {
+  heart.addEventListener('click', function() {
+    this.classList.toggle('fa-regular');
+    this.classList.toggle('fa-solid');
+    this.style.color = this.classList.contains('fa-solid') ? '#f87171' : '';
+    showMentorToast(this.classList.contains('fa-solid') ? '❤️ Liked!' : 'Like removed');
+  });
+});
+
+document.querySelectorAll('.fa-regular.fa-comment').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const card = this.closest('.post-card');
+    let input = card.querySelector('.post-reply');
+    if (!input) {
+      input = document.createElement('div');
+      input.className = 'post-reply';
+      input.style.cssText = 'padding:10px 12px;display:flex;gap:8px;border-top:1px solid rgba(255,255,255,.08)';
+      input.innerHTML = `<input placeholder="Comment…" style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:6px 10px;color:#fff;font-size:12px;outline:none"><button style="padding:6px 12px;background:#5865f2;border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:700;cursor:pointer">Post</button>`;
+      card.appendChild(input);
+      input.querySelector('input').focus();
+      input.querySelector('button').onclick = () => {
+        const val = input.querySelector('input').value.trim();
+        if (val) { showMentorToast('💬 Comment posted!'); card.removeChild(input); }
+      };
+    }
+  });
+});
+
+function showAllMentors() {
+  const dir = document.querySelector('.directory');
+  if (!dir) return;
+  const mentors = [
+    {name:'Mentor John', school:'Global Tech High', email:'john@globaltech.com', color:'var(--vortex-glow)', subject:'Web Dev'},
+    {name:'Dr. Sarah M.', school:'Nexus Academy', email:'sarah@nexus.edu', color:'#e879f9', subject:'Data Science'},
+    {name:'Prof. David K.', school:'Digital Institute', email:'d.kim@digitalinstitute.io', color:'#f87171', subject:'AI & ML'},
+    {name:'Coach Rina', school:'Faith College', email:'rina@faith.org', color:'#34d399', subject:'Leadership'},
+    {name:'Mr. Osei', school:'Global Tech High', email:'osei@globaltech.com', color:'#fbbf24', subject:'Design'},
+    {name:'Mrs. Achiaa', school:'Nexus Academy', email:'achiaa@nexus.edu', color:'#818cf8', subject:'Business'},
+  ];
+  dir.innerHTML = `
+    <h2 style="margin-bottom:20px;font-size:1.4rem">All Mentors</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      ${mentors.map(m => `
+        <div class="result-box" style="cursor:pointer;transition:.2s" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform=''">
+          <div class="pfp-lg" style="background:${m.color};display:flex;align-items:center;justify-content:center;font-size:1.5rem">👤</div>
+          <h3>${m.name}</h3>
+          <p>${m.email}</p>
+          <p style="font-size:12px;color:var(--vortex-glow);margin-bottom:12px">📚 ${m.subject} · ${m.school}</p>
+          <div class="btn-group">
+            <button class="btn-sm"><i class="fa-solid fa-phone"></i> Call</button>
+            <button class="btn-sm"><i class="fa-solid fa-message"></i> Message</button>
+            <button class="btn-sm" style="background:rgba(0,212,255,.15);color:var(--vortex-glow)">📋 Profile</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function showGroupMentors() {
+  const dir = document.querySelector('.directory');
+  if (!dir) return;
+  const groups = [
+    {name:'Web Dev Bootcamp', mentor:'Mentor John', members:18, color:'#5865f2'},
+    {name:'AI Study Circle', mentor:'Dr. Sarah M.', members:12, color:'#e879f9'},
+    {name:'Leadership Track', mentor:'Coach Rina', members:9, color:'#34d399'},
+    {name:'Design Masterclass', mentor:'Mr. Osei', members:15, color:'#fbbf24'},
+  ];
+  dir.innerHTML = `
+    <h2 style="margin-bottom:20px;font-size:1.4rem">Group Mentorship Programs</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      ${groups.map(g => `
+        <div style="background:#2b2d31;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,.08)" onmouseenter="this.style.transform='translateY(-3px)'" onmouseleave="this.style.transform=''">
+          <div style="height:80px;background:${g.color};opacity:.8"></div>
+          <div style="padding:16px">
+            <h3 style="font-size:1rem;margin-bottom:4px">${g.name}</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Led by ${g.mentor}</p>
+            <p style="font-size:11px;color:var(--text-muted)">${g.members} members enrolled</p>
+            <button style="margin-top:12px;width:100%;padding:8px;background:${g.color};border:none;border-radius:6px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">Enroll Now</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function showMentorModal(type) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `
+    <div style="background:#1e1f22;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:30px;width:100%;max-width:400px">
+      <h3 style="margin-bottom:20px;font-size:1.2rem">Login / Sign Up</h3>
+      <input type="email" placeholder="Email" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-size:14px;outline:none;margin-bottom:12px">
+      <input type="password" placeholder="Password" style="width:100%;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-size:14px;outline:none;margin-bottom:16px">
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button onclick="this.closest('[style*=fixed]').remove()" style="padding:9px 18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#888;font-size:13px;cursor:pointer">Cancel</button>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="padding:9px 18px;background:linear-gradient(135deg,#5865f2,#4752c4);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer">Continue</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+function showMentorToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(0,0,0,.9);border:1px solid rgba(255,255,255,.2);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+console.log("Mentorship Hub fully functional");
+</script>

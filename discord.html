@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Discord | Full Feature</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- DISCORD OFFICIAL COLOR PALETTE --- */
+        :root {
+            --bg-servers: #1e1f22;
+            --bg-channels: #2b2d31;
+            --bg-chat: #313338;
+            --bg-members: #2b2d31;
+            --bg-user-bar: #232428;
+            --bg-input: #383a40;
+            --text-main: #dbdee1;
+            --text-muted: #949ba4;
+            --discord-blurple: #5865f2;
+            --status-online: #23a559;
+            --status-idle: #f0b232;
+            --status-dnd: #f23f43;
+            --header-shadow: 0 1px 0 rgba(0,0,0,0.1), 0 1.5px 0 rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-servers); color: white; display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- 1. SERVER COLUMN --- */
+        .sidebar-servers { width: 72px; background: var(--bg-servers); padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 8px; overflow-y: auto; }
+        .server-icon { width: 48px; height: 48px; background: var(--bg-chat); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; position: relative; }
+        .server-icon:hover, .server-icon.active { border-radius: 16px; background: var(--discord-blurple); color: white; }
+        .server-icon i { font-size: 1.2rem; }
+        .server-separator { width: 32px; height: 2px; background: #35363c; margin: 4px 0; }
+
+        /* --- 2. CHANNEL COLUMN --- */
+        .sidebar-channels { width: 240px; background: var(--bg-channels); display: flex; flex-direction: column; }
+        .server-header { padding: 12px 16px; font-weight: bold; box-shadow: var(--header-shadow); cursor: pointer; display: flex; justify-content: space-between; align-items: center; height: 48px; }
+        .channel-container { flex: 1; overflow-y: auto; padding: 12px 8px; }
+        .category { font-size: 12px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin: 16px 0 4px 8px; display: flex; align-items: center; gap: 4px; }
+        .channel-row { padding: 6px 8px; border-radius: 4px; display: flex; align-items: center; gap: 6px; color: var(--text-muted); cursor: pointer; margin-bottom: 2px; transition: 0.1s; }
+        .channel-row:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
+        .channel-row.active { background: rgba(255,255,255,0.1); color: white; }
+        .channel-row i { font-size: 1.1rem; opacity: 0.6; }
+
+        /* --- USER SETTINGS BAR --- */
+        .user-panel { height: 52px; background: var(--bg-user-bar); padding: 0 8px; display: flex; align-items: center; gap: 4px; }
+        .user-profile { display: flex; align-items: center; gap: 8px; flex: 1; padding: 4px; border-radius: 4px; cursor: pointer; }
+        .user-profile:hover { background: rgba(255,255,255,0.1); }
+        .pfp-wrap { width: 32px; height: 32px; border-radius: 50%; background: var(--discord-blurple); position: relative; display: flex; align-items: center; justify-content: center; }
+        .status-indicator { width: 12px; height: 12px; border-radius: 50%; position: absolute; bottom: -2px; right: -2px; border: 3px solid var(--bg-user-bar); background: var(--status-online); }
+        .name-stack { line-height: 1.2; }
+        .display-name { font-size: 13px; font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80px; }
+        .user-id { font-size: 11px; color: var(--text-muted); display: block; }
+        .control-icons i { color: var(--text-main); padding: 6px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+        .control-icons i:hover { background: rgba(255,255,255,0.1); }
+        .control-icons i.active { color: var(--status-dnd); }
+
+        /* --- 3. CHAT COLUMN --- */
+        .chat-view { flex: 1; background: var(--bg-chat); display: flex; flex-direction: column; }
+        .chat-top-bar { height: 48px; padding: 0 16px; box-shadow: var(--header-shadow); display: flex; align-items: center; gap: 8px; font-weight: 600; z-index: 2; }
+        .chat-top-bar i { color: var(--text-muted); font-size: 1.3rem; }
+        .utility-nav { margin-left: auto; display: flex; gap: 16px; color: var(--text-muted); align-items: center; }
+        .search-pill { background: var(--bg-servers); padding: 2px 8px; border-radius: 4px; font-size: 13px; display: flex; align-items: center; gap: 20px; cursor: text; }
+
+        .messages-wrap { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column-reverse; } /* Reversed for newest at bottom */
+        .message-entry { display: flex; gap: 16px; margin-top: 18px; transition: 0.1s; padding: 4px 0; }
+        .message-entry:hover { background: rgba(0,0,0,0.03); }
+        .msg-text-wrap h5 { font-size: 1rem; display: flex; align-items: baseline; gap: 8px; }
+        .msg-text-wrap h5 span { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+        .actual-text { color: var(--text-main); margin-top: 2px; font-size: 15px; }
+
+        /* --- 4. MEMBER LIST --- */
+        .member-list { width: 240px; background: var(--bg-members); padding: 12px 8px; overflow-y: auto; }
+        .member-card { display: flex; align-items: center; gap: 12px; padding: 6px 8px; border-radius: 4px; cursor: pointer; margin-bottom: 2px; }
+        .member-card:hover { background: rgba(255,255,255,0.05); }
+        .member-card .pfp-wrap { width: 32px; height: 32px; }
+
+        /* INPUT AREA */
+        .input-section { padding: 0 16px 24px; }
+        .input-container { background: var(--bg-input); border-radius: 8px; padding: 11px 16px; display: flex; align-items: center; gap: 16px; }
+        .input-container input { background: transparent; border: none; outline: none; color: white; flex: 1; font-size: 15px; }
+        .input-container i { color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+        .input-container i:hover { color: var(--text-main); }
+
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+    </style>
+</head>
+<body>
+<!-- UNIVERSAL HUB NAV BAR -->
+<div id='hub-nav' style='position:fixed;top:0;left:0;right:0;height:42px;background:rgba(4,4,15,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 12px;gap:6px;z-index:99999;font-family:Oxanium,sans-serif'>
+  <a href="index.html" style='display:flex;align-items:center;gap:6px;padding:5px 10px;background:linear-gradient(135deg,rgba(129,140,248,.3),rgba(79,70,229,.2));border:1px solid rgba(129,140,248,.4);border-radius:8px;text-decoration:none;font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:.05em'>⬅ HUB</a>
+  <div style='width:1px;height:20px;background:rgba(255,255,255,0.1);margin:0 4px'></div>
+  <a href="firechat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fca5a5'>🔥 Fire</a>
+  <a href="discord.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(88,101,242,.12);border:1px solid rgba(88,101,242,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#8b9cf8'>⚙ Discord</a>
+  <a href="cell_chat.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#00d4ff'>⛪ Cells</a>
+  <a href="Mentorship.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#34d399'>🎓 Mentor</a>
+  <a href="vortex.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(232,121,249,.1);border:1px solid rgba(232,121,249,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#e879f9'>⚡ Vortex</a>
+  <a href="Discovery.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#fbbf24'>🧭 Discover</a>
+  <div style='flex:1'></div>
+  <a href="admin.html" style='display:flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;text-decoration:none;font-size:11px;font-weight:600;color:#f87171'>🛡️ Admin</a>
+</div>
+<style>html, body { margin-top: 0 !important; } #hub-nav { position: fixed; z-index: 99999; } body > *:not(#hub-nav) { margin-top: 42px; } .orbs,.noise,.scan-line,.scan,canvas,#rainbowCv,#ptcls { margin-top: 0 !important; top: 42px; } </style>
+
+
+    <div class="sidebar-servers">
+        <div class="server-icon active"><i class="fa-brands fa-discord"></i></div>
+        <div class="server-separator"></div>
+        <div class="server-icon" style="background: var(--discord-blurple)"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="server-icon"><i class="fa-solid fa-atom"></i></div>
+        <div class="server-icon"><i class="fa-solid fa-fire"></i></div>
+        <div class="server-icon"><i class="fa-solid fa-cross"></i></div>
+        <div class="server-icon" style="color: var(--status-online)"><i class="fa-solid fa-plus"></i></div>
+        <div class="server-icon" style="color: var(--status-online)"><i class="fa-solid fa-compass"></i></div>
+    </div>
+
+    <div class="sidebar-channels">
+        <div class="server-header">
+            Universal Chat <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem;"></i>
+        </div>
+        <div class="channel-container">
+            <div class="category"><i class="fa-solid fa-chevron-down"></i> Information</div>
+            <div class="channel-row"><i class="fa-solid fa-bullhorn"></i> announcements</div>
+            <div class="channel-row"><i class="fa-solid fa-book"></i> rules-and-faq</div>
+            
+            <div class="category"><i class="fa-solid fa-chevron-down"></i> Text Channels</div>
+            <div class="channel-row active"><i class="fa-solid fa-hashtag"></i> general</div>
+            <div class="channel-row"><i class="fa-solid fa-hashtag"></i> mentor-lounge</div>
+            <div class="channel-row"><i class="fa-solid fa-hashtag"></i> dev-logs</div>
+
+            <div class="category"><i class="fa-solid fa-chevron-down"></i> Voice Channels</div>
+            <div class="channel-row"><i class="fa-solid fa-volume-high"></i> General Voice</div>
+            <div class="channel-row"><i class="fa-solid fa-volume-high"></i> Bible Study</div>
+        </div>
+
+        <div class="user-panel">
+            <div class="user-profile">
+                <div class="pfp-wrap"><div class="status-indicator"></div><i class="fa-solid fa-user"></i></div>
+                <div class="name-stack">
+                    <span class="display-name">Dev_User</span>
+                    <span class="user-id">Online</span>
+                </div>
+            </div>
+            <div class="control-icons">
+                <i class="fa-solid fa-microphone" id="mic" onclick="toggleIcon('mic')"></i>
+                <i class="fa-solid fa-headphones" id="head" onclick="toggleIcon('head')"></i>
+                <i class="fa-solid fa-gear"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-view">
+        <div class="chat-top-bar">
+            <i class="fa-solid fa-hashtag"></i>
+            <span>general</span>
+            <div class="utility-nav">
+                <i class="fa-solid fa-bell-slash"></i>
+                <i class="fa-solid fa-thumbtack" style="transform: rotate(45deg);"></i>
+                <i class="fa-solid fa-user-group"></i>
+                <div class="search-pill">Search <i class="fa-solid fa-magnifying-glass"></i></div>
+                <i class="fa-solid fa-inbox"></i>
+                <i class="fa-solid fa-circle-question"></i>
+            </div>
+        </div>
+
+        <div class="messages-wrap" id="msg-log">
+            <div class="message-entry">
+                <div class="pfp-wrap" style="width: 40px; height: 40px;"><i class="fa-solid fa-user"></i></div>
+                <div class="msg-text-wrap">
+                    <h5>Mentor_Alpha <span>Today at 1:15 PM</span></h5>
+                    <div class="actual-text">Welcome! This is the full feature layout. Try clicking the mic icon or typing a message below!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-container">
+                <i class="fa-solid fa-circle-plus"></i>
+                <input type="text" id="chat-input" placeholder="Message #general" onkeypress="sendMessage(event)">
+                <i class="fa-solid fa-gift"></i>
+                <i class="fa-solid fa-face-smile"></i>
+                <i class="fa-solid fa-note-sticky"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-list">
+        <div class="category">Staff — 1</div>
+        <div class="member-card">
+            <div class="pfp-wrap"><div class="status-indicator" style="background: var(--status-dnd);"></div><i class="fa-solid fa-crown"></i></div>
+            <span style="color: #f23f43; font-weight: 600;">System_Admin</span>
+        </div>
+        <div class="category">Online — 2</div>
+        <div class="member-card">
+            <div class="pfp-wrap"><div class="status-indicator"></div><i class="fa-solid fa-user"></i></div>
+            <span style="font-weight: 600;">Mentor_Alpha</span>
+        </div>
+        <div class="member-card">
+            <div class="pfp-wrap"><div class="status-indicator" style="background: var(--status-idle);"></div><i class="fa-solid fa-user"></i></div>
+            <span style="opacity: 0.6;">Junior_Dev</span>
+        </div>
+    </div>
+
+    <script>
+        // Feature: Mute/Deafen Toggle
+        function toggleIcon(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('active');
+            if (id === 'mic') {
+                el.classList.toggle('fa-microphone');
+                el.classList.toggle('fa-microphone-slash');
+            } else {
+                el.classList.toggle('fa-headphones');
+                el.classList.toggle('fa-headphones-simple');
+            }
+        }
+
+        // Feature: Send Message Simulation
+        function sendMessage(e) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('chat-input');
+                const log = document.getElementById('msg-log');
+                if (input.value.trim() !== "") {
+                    const newMsg = `
+                        <div class="message-entry">
+                            <div class="pfp-wrap" style="width: 40px; height: 40px; background: #23a559;"><i class="fa-solid fa-user"></i></div>
+                            <div class="msg-text-wrap">
+                                <h5>Dev_User <span>Just now</span></h5>
+                                <div class="actual-text">${input.value}</div>
+                            </div>
+                        </div>
+                    `;
+                    log.insertAdjacentHTML('afterbegin', newMsg);
+                    input.value = "";
+                }
+            }
+        }
+
+        console.log("Discord-Universal Full Feature Interface Active.");
+    </script>
+</body>
+</html><script>
+// Make all Discord buttons functional
+document.querySelectorAll('.channel-row').forEach(row => {
+  row.addEventListener('click', function() {
+    document.querySelectorAll('.channel-row').forEach(r => r.classList.remove('active'));
+    this.classList.add('active');
+    const name = this.textContent.trim();
+    const chatBar = document.querySelector('.chat-top-bar span');
+    if (chatBar) chatBar.textContent = name;
+    const placeholder = document.querySelector('.input-container input');
+    if (placeholder) placeholder.placeholder = `Message ${name}`;
+  });
+});
+
+// Server icon switching
+document.querySelectorAll('.server-icon').forEach(icon => {
+  icon.addEventListener('click', function() {
+    document.querySelectorAll('.server-icon').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Add member click effects
+document.querySelectorAll('.member-card').forEach(card => {
+  card.addEventListener('click', function() {
+    const name = this.querySelector('span')?.textContent || 'User';
+    const input = document.getElementById('chat-input');
+    if (input) input.value = `@${name} `;
+    input?.focus();
+  });
+});
+
+// Voice channel join
+document.querySelectorAll('.channel-row').forEach(row => {
+  if (row.querySelector('.fa-volume-high')) {
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const name = this.textContent.trim();
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(35,165,89,.9);color:#fff;padding:8px 20px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;animation:fadeIn .3s ease';
+      toast.textContent = `🔊 Joined ${name}`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    });
+  }
+});
+
+console.log("Discord Hub fully functional");
+</script>
